@@ -1,0 +1,82 @@
+/**
+ * Programming Assignment 5 - 11.12.19
+ * @author 
+ *  Ge Xiong
+ */
+public class IntArrayQueue implements IntQueueInterface{
+	private int[] data;
+	private int front;
+	private int rear;
+	private int manyItems;
+	
+	public IntArrayQueue() {
+	}
+	public IntArrayQueue(int capacity) {
+		this.data = new int[capacity];
+		this.manyItems = 0;
+	}
+	@Override
+	public boolean isEmpty() {
+		if (this.manyItems == 0)
+			return true;
+		else	
+			return false;
+	}
+	private int nextIndex(int i){
+		int next = i + 1;
+		if (next == data.length)
+			next = 0;
+		return next;
+	}
+	@Override
+	public void add(int element) {
+		if (this.manyItems == 0) {
+			this.front = 0; 
+			this.rear = 0;
+		}
+		else
+			rear = nextIndex(rear); 
+		this.data[rear] = element; 
+		this.manyItems++;
+	}
+	@Override
+	public int remove() {
+		int answer; 
+		if (this.manyItems == 0) 
+			answer = 0;
+		answer = this.data[front]; 
+		this.front = nextIndex(front); 
+		this.manyItems--; 
+		return answer;
+	}
+	@Override
+	public int size() {
+		return this.manyItems;
+	}
+	@Override
+	public String toString() {
+		String output = "[ ";
+		if (manyItems == 0)
+			return " [] "; 
+		if (front <= rear){
+			for (int i = front; i <= rear; i++)
+				output += this.data[i]+"\t";
+		}else{
+			for (int i = front; i < this.data.length; i++)
+				output += this.data[i]+"\t";
+			for (int i = 0; i <= rear; i++)
+				output += this.data[i]+"\t";
+		}
+		
+		output += " ] \n";
+		return output;
+	}
+}
+
+public interface IntQueueInterface {
+	public boolean isEmpty();
+	public void add(int element);
+	public int remove();
+	public int size();
+	public String toString();
+}
