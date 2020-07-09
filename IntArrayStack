@@ -1,0 +1,62 @@
+/**
+ * Programming Assignment 5 - 11.12.19
+ * @author 
+ *  Ge Xiong
+ */
+public class IntArrayStack implements IntStackInterface{
+	private int top;
+	private int[] data;
+	
+	public IntArrayStack() {
+	}
+	public IntArrayStack(int initialCap) {
+		this.top = 0;
+		this.data = new int[initialCap];
+	}
+	@Override
+	public boolean isEmpty() {
+		if(this.top == 0)
+			return true;
+		else
+			return false;
+	}
+	@Override
+	public int peek() {
+		return this.data[this.top];
+	}
+	@Override
+	public int pop() {
+		this.top--;
+		return this.data[this.top];
+	}
+	@Override
+	public void push(int item) {
+		this.data[this.top] = item;
+		this.top++;
+	}
+	@Override
+	public int size() {
+		return this.top;
+	}
+	@Override
+	public String toString() {
+		String output = "[ ";
+		if (this.top == 0)
+			return " [] "; 
+		else{
+			for (int i=0; i < this.data.length; i++)
+				output += this.data[i]+" ";
+		}
+		output += " ] \n";
+		return output;
+	}
+}
+
+public interface IntStackInterface {
+	public boolean isEmpty();
+	public int peek();
+	public int pop();
+	public void push(int item);
+	public int size();
+	public String toString();
+}
