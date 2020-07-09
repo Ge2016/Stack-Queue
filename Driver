@@ -1,0 +1,246 @@
+/**
+ * Programming Assignment 5 - 11.12.19
+ * @author 
+ *  Ge Xiong
+ */
+public class Driver{
+	public static void main(String[] args) {
+		IntArrayStack stack = new IntArrayStack(7);
+		stack.push(1);
+		stack.push(2);
+		stack.push(3);
+		stack.push(4);
+		stack.push(5);
+		stack.push(6);
+		stack.push(7);
+		System.out.println("Stack list: ");
+		System.out.println(stackToInt(stack));
+		
+		IntArrayStack stack2 = new IntArrayStack(7);
+		stack2.push(10);
+		stack2.push(20);
+		stack2.push(30);
+		stack2.push(40);
+		stack2.push(50);
+		stack2.push(60);
+		stack2.push(70);
+		System.out.println("Sum: " + popSome(stack2, 20));
+		
+		IntArrayStack stack3 = new IntArrayStack(7);
+		stack3.push(11);
+		stack3.push(22);
+		stack3.push(33);
+		stack3.push(44);
+		stack3.push(55);
+		stack3.push(66);
+		stack3.push(77);
+		//extractFromStack(stack3, 33); 
+		System.out.println("Equal? " + equalStacks(stack, stack2));
+		
+		IntArrayQueue queue = new IntArrayQueue(7);
+		queue.add(1);
+		queue.add(2);
+		queue.add(3);
+		queue.add(4);
+		queue.add(5);
+		queue.add(6);
+		queue.add(7);
+		System.out.println("Swapping: ");
+		swap(stack3, queue); 
+		System.out.print(stack); 
+		System.out.println(queue);
+		
+		System.out.println("Replaced? " + replace(queue, 4, 40));
+		System.out.println("Position: " + searchQueue(queue, 20));
+		
+		IntArrayQueue queue22 = new IntArrayQueue(7);
+		queue22.add(10);
+		queue22.add(20);
+		queue22.add(30);
+		queue22.add(40);
+		queue22.add(50);
+		queue22.add(60);
+		queue22.add(70);
+		System.out.println("Even Elements: " + evenElements(queue22));
+		
+		IntArrayQueue queue2 = new IntArrayQueue(7);
+		queue2.add(1);
+		queue2.add(2);
+		queue2.add(3);
+		queue2.add(4);
+		queue2.add(5);
+		queue2.add(6);
+		queue2.add(7);
+		IntArrayQueue[] arr = split(queue2);
+		System.out.println(arr[0]);
+		System.out.println(arr[1]);
+		
+	}
+	/**
+	 * Contains a stack of 7 integers or less.
+	 * @param - stack
+	 *  the input stack contains 7 or less integers all of them in the range 0 to 9
+	 * @return
+	 *  returns as output an integer number representation of the values stored on the stack 
+	 */
+	public static int stackToInt(IntStackInterface stack) {		
+        int retValue = 0; 
+		while(!stack.isEmpty()) {
+			int x = stack.pop();
+            retValue += x * (int)Math.pow(10, stack.size());
+        }
+		return retValue;
+	}
+	/**
+	 * This method pops count elements from the stack and outputs the sum of the popped elements.
+	 * @param intputS, count
+	 *  counts the elements in the stack of inputS
+	 * @return
+	 *  returns -1 if the stack has less than count values
+	 */
+	public static int popSome(IntStackInterface inputS, int count) {
+		if (inputS.size() <= count)
+			count = -1;
+		for (int i = 0; i < inputS.size(); i++)
+			count += inputS.pop();
+		return count;
+	}
+	/**
+	 * The method removes all occurrences of the input value from the input stack. 
+	 * All other elements in the stack must remain unchanged and in the same order. 
+	 * @param stack, value 
+	 *  inputs the value desired to be removed in the stack
+	 */
+	public static void extractFromStack(IntStackInterface stack, int value) {
+		IntArrayStack s1 = new IntArrayStack();
+		int sizeS = stack.size();
+		int x = stack.pop();
+		for(int i = 1; i < sizeS; i++) {
+			if (x != value)
+				s1.push(x);	
+		}
+		for(int i = 1; i < sizeS; i++) {
+			stack.push(s1.pop());
+		}
+	}
+	/**
+	 * This method takes two stacks and assume that two stacks are equal if they have the same values in the same order.
+	 * @param s1, s2
+	 *  s1: the first stack to be compare
+	 *  s2: the second stack to be compare
+	 * @return
+	 *  return true or false based on whether the two stacks are equal or not
+	 */
+	public static boolean equalStacks(IntStackInterface s1, IntStackInterface s2) {
+		boolean output = true;
+		int sizeS1 = s1.size();
+		IntArrayStack copy1 = new IntArrayStack();
+		IntArrayStack copy2 = new IntArrayStack();
+		for (int i = 0; i < sizeS1; i++) {
+			int x = s1.pop(); int y = s2.pop();
+			copy1.push(x); copy2.push(y);
+			if(x != y)
+				output = false;		
+		}
+		//return stacks: The two input stacks must remain unchanged after the call to this method.
+		for (int i = 0; i < sizeS1; i++) {
+			s1.push(copy1.pop());
+			s2.push(copy2.pop());
+		}
+		return output;
+	}
+	/**
+	 *  The method swaps the contents of the stack and the queue.
+	 * @param s, q
+	 *  s: a stack to be used to swap with the q
+	 *  q: a queue to be used to swap with the s
+	 */
+	public static void swap(IntStackInterface s, IntQueueInterface q) {
+		int sizeQ = q.size();
+		
+		for(int i = 0; i < s.size(); i++) {
+			q.add(s.pop());
+		}
+		for(int i = 0; i > sizeQ; i++) {
+			s.push(q.remove());
+		}
+	}
+	/**
+	 * Changes the input queue by replacing each occurrence of the old values with new values.
+	 * @param queue, oldVal, newVal
+	 * queue: working with a queue data
+	 * oldVal: to be replaced by new ones 
+	 * newVal: replaces old values by new ones 
+	 */
+	public static boolean replace(IntQueueInterface queue, int oldVal, int newVal) {
+		boolean output = false;
+		int sizeQ = queue.size();
+		
+		for(int i = 0; i < sizeQ; i++) {
+			queue.remove();
+			if(i != oldVal)
+				queue.add(i);
+			else
+				oldVal = newVal;
+				output = true;
+		}
+		return output;
+	}
+	/**
+	 * Searches the input queue for the input integer and returns as output the position of the input integer in the queue.
+	 * @param queue, value 
+	 * queue: working with a queue data
+	 * value: searches the position of the input value 
+	 * @return
+	 * 	returns -1 f the integer is not found in the queue
+	 */
+	public static int searchQueue(IntQueueInterface queue, int value) {
+		int position = 0;
+		int x = queue.remove();
+		for (int i = 0; i < queue.size(); i++)
+			if (value == x)
+				position = i;
+			else
+				position = -1;
+		queue.add(x);
+		return position;
+	}
+	/**
+	 * The method extracts all even numbers from inputQ and outputs it.
+	 * All other odd or zero elements must remain in inputQ unchanged and in the same order.
+	 * @param inputQ
+	 *  a type of IntQueueInterface
+	 * @return
+	 * 	returns another queue that includes all the even numbers
+	 */
+	public static IntArrayQueue evenElements(IntQueueInterface inputQ) {
+		IntArrayQueue q1 = new IntArrayQueue(7);
+		while (inputQ.size() > 0) {
+          	int x = inputQ.remove();
+        	if (x % 2 == 0)
+              	q1.add(x);
+		}
+		return q1;
+	}
+	/**
+	 * The method returns two queues as output where the first queue includes all even values from inputQ and the other queue includes all odd values from inputQ. 
+	 * @param inputQ
+	 * 	inputs a queue to split its values from odd/even
+	 * @return
+	 *  returns an even queue and an odd queue
+	 */
+	public static IntArrayQueue[] split(IntQueueInterface inputQ) {
+		IntArrayQueue q1 = new IntArrayQueue(7);
+		IntArrayQueue q2 = new IntArrayQueue(7);
+		while (inputQ.size() > 0) {
+          	int x = inputQ.remove();
+        	if (x % 2 == 0)
+              	q1.add(x);
+            else
+              	q2.add(x);
+		}
+		return new IntArrayQueue[] {q1,q2};
+	}
+}
+
+
